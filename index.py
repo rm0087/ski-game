@@ -1,10 +1,11 @@
 import pygame
 from sys import exit
 
+
 width = int(1366)
 height = int(768)
 pygame.init()
-screen = pygame.display.set_mode((width, height), pygame.WINDOWMAXIMIZED)
+screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption('ski-game')
 clock = pygame.time.Clock()
 test_font = pygame.font.Font(None, 50)
@@ -46,17 +47,10 @@ while True:
         tree_rect.left = width
         tree_rect.top = height
     screen.blit(tree_surf, tree_rect)
-    
-    
-    
+   
     ## player element
     screen.blit(player_surf, player_rect)
 
     ## collision handler
     # if player_rect.colliderect(tree_rect):
     #     print
-
-
-
-    pygame.display.update()
-    clock.tick(60)
