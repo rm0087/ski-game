@@ -1,7 +1,6 @@
 import pygame
 from sys import exit
 
-
 width = int(1366)
 height = int(768)
 pygame.init()
