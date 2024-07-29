@@ -39,6 +39,7 @@ coin_sound = pygame.mixer.Sound('assets/music/coins.mp3')
 game_over_sound = pygame.mixer.Sound('assets/music/game-over.wav')
 jump_sound = pygame.mixer.Sound('assets/music/jump.wav')
 win_sound = pygame.mixer.Sound('assets/music/win.wav')
+start_page_sound = pygame.mixer.Sound('assets/music/start_page.mp3')
 
 # Game variables
 player_x_pos = 0
@@ -64,6 +65,7 @@ game_over = False
 game_won = False
 high_scores = []
 player_name = ""
+start_music_playing = False
 
 def spawn_obstacle():
     obstacle_type = random.choice(['tree', 'rock'])
@@ -98,7 +100,7 @@ def draw_score_board():
     screen.blit(restart_text, (width // 2 - restart_text.get_width() // 2, height - 100))
 
 def reset_game():
-    global player_rect, obstacles, coins, score, coins_collected, lives, distance, is_jumping, player_velocity_y, game_over, game_won
+    global player_rect, obstacles, coins, score, coins_collected, lives, distance, is_jumping, player_velocity_y, game_over, game_won, start_music_playing
     player_rect.bottomleft = (player_x_pos, player_y_pos)
     obstacles = []
     coins = []
@@ -110,6 +112,7 @@ def reset_game():
     player_velocity_y = 0
     game_over = False
     game_won = False
+    start_music_playing = False
 
 # Main game loop
 while True:
@@ -120,6 +123,8 @@ while True:
         if event.type == pygame.KEYDOWN:
             if game_state == "start" and event.key == pygame.K_SPACE:
                 game_state = "playing"
+                start_page_sound.stop()
+                start_music_playing = False
                 reset_game()
             elif game_state == "playing" and not is_jumping and event.key == pygame.K_SPACE:
                 is_jumping = True
@@ -138,8 +143,14 @@ while True:
                 game_state = "start"
 
     if game_state == "start":
+        if not start_music_playing:
+            start_page_sound.play(-1)
+            start_music_playing = True
         draw_start_screen()
     elif game_state == "playing":
+        if start_music_playing:
+            start_page_sound.stop()
+            start_music_playing = False
         if not game_over and not game_won:
             # Player movement
             keys = pygame.key.get_pressed()
@@ -227,6 +238,9 @@ while True:
             game_state = "game_over"
 
     elif game_state == "game_over":
+        if start_music_playing:
+            start_page_sound.stop()
+            start_music_playing = False
         if game_over:
             screen.blit(game_over_background, (0, 0))
             end_text = main_font.render("Game Over!", True, (255, 0, 0))  
@@ -241,6 +255,9 @@ while True:
         screen.blit(submit_text, (width // 2 - submit_text.get_width() // 2, height // 2 + 50))
 
     elif game_state == "score_board":
+        if start_music_playing:
+            start_page_sound.stop()
+            start_music_playing = False
         draw_score_board()
 
     pygame.display.update()
