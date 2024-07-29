@@ -121,6 +121,7 @@ while True:
     if coin_rect.right <= 0:
         coin_rect.x = coin_x_pos
         coin_rect.y = coin_y_pos
+        
     screen.blit(coin_surf, coin_rect)
 
     # player element
@@ -142,6 +143,8 @@ while True:
     if player_rect.colliderect(coin_rect):
         collision_occured = True
         score += 1
+        coin_rect.x = coin_x_pos
+        coin_rect.y = coin_y_pos
         
     score_surf = test_font.render(f'Score: {score}', False, 'Black')
     score_rect = score_surf.get_rect(bottomright = (width - 20, height - 20))
