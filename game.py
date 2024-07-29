@@ -112,6 +112,7 @@ while True:
         tree_rect.top = height
         tree_collide.x = width
         tree_collide.y = height
+        tree_collide = pygame.Rect((tree_x_pos, tree_y_pos, 1, 1))
     screen.blit(tree_surf, tree_rect)
 
    
@@ -136,6 +137,9 @@ while True:
     #         game_over = True 
     if player_rect.colliderect(tree_collide):
         collision_occured = True
+        if collision_occured:
+            tree_collide = pygame.Rect((0, 0, 0, 0))
+                
         print(f"collision occured ={collision_occured}")
     else:
         collision_occured = False
