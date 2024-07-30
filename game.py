@@ -43,12 +43,12 @@ start_page_sound = pygame.mixer.Sound('assets/music/start_page.mp3')
 
 # Game variables
 player_x_pos = 0
-player_y_pos = 600
+player_y_pos = 500  # Change to initial y position (ground level)
 player_rect = player_surf.get_rect(bottomleft=(player_x_pos, player_y_pos))
 player_speed = 10
 
 is_jumping = False
-jump_velocity = -20
+jump_velocity = -15  
 gravity = 1
 player_velocity_y = 0
 
@@ -58,7 +58,7 @@ score = 0
 coins_collected = 0
 lives = 3
 distance = 0
-FINISH_DISTANCE = 5000
+FINISH_DISTANCE = 2000
 
 game_state = "start"
 game_over = False
@@ -71,9 +71,16 @@ def spawn_obstacle():
     obstacle_type = random.choice(['tree', 'rock'])
     if obstacle_type == 'tree':
         obstacle_surf = tree_surf
-    else:
+        obstacle_x = random.randint(400,600)
+        obstacle_y = random.randint(350, height - tree_surf.get_height())
+    else:  
         obstacle_surf = rock_surf
-    obstacle_rect = obstacle_surf.get_rect(topleft=(width, random.randint(350, height)))
+        snow_ground_top = 500  
+        snow_ground_bottom = 600
+        obstacle_x = random.randint(400,600)
+        obstacle_y = random.randint(snow_ground_top, snow_ground_bottom - rock_surf.get_height())
+    
+    obstacle_rect = obstacle_surf.get_rect(topleft=(obstacle_x, obstacle_y))
     obstacles.append((obstacle_type, obstacle_rect))
 
 def spawn_coin():
@@ -135,6 +142,9 @@ while True:
                     high_scores.append((player_name, score))
                     high_scores.sort(key=lambda x: x[1], reverse=True)
                     game_state = "score_board"
+                elif event.key == pygame.K_r:
+                    game_state = "start"
+                    reset_game()
                 elif event.key == pygame.K_BACKSPACE:
                     player_name = player_name[:-1]
                 else:
@@ -179,7 +189,7 @@ while True:
                     is_jumping = False
                     player_velocity_y = 0
 
-            # Spawn obstacles and coins for 1/120 chance of happening each frame
+            # Spawn obstacles and coins
             if random.randint(1, 120) == 1: 
                 spawn_obstacle()
             if random.randint(1, 120) == 1:
@@ -190,14 +200,14 @@ while True:
             for obstacle_type, obstacle_rect in obstacles:
                 obstacle_rect.x -= 10
                 obstacle_rect.y -= 5
-                obstacle_collison = pygame.Rect(obstacle_rect.x, obstacle_rect.bottom - 10, 35, 10)
+                obstacle_collision = pygame.Rect(obstacle_rect.x, obstacle_rect.bottom - 10, 35, 10)
                 if obstacle_type == 'tree':
                     screen.blit(tree_surf, obstacle_rect)
                 else:
                     screen.blit(rock_surf, obstacle_rect)
                 if obstacle_rect.right <= 0:
                     obstacles.remove((obstacle_type, obstacle_rect))
-                if player_collision.colliderect(obstacle_collison):
+                if player_collision.colliderect(obstacle_collision):
                     lives -= 1
                     obstacles.remove((obstacle_type, obstacle_rect))
                     if lives <= 0:
@@ -235,6 +245,7 @@ while True:
                 if player_rect.colliderect(finish_line_rect):
                     game_won = True
                     win_sound.play()
+                    game_state = "game_over"
 
         if game_over or game_won:
             game_state = "game_over"
@@ -245,16 +256,19 @@ while True:
             start_music_playing = False
         if game_over:
             screen.blit(game_over_background, (0, 0))
-            end_text = main_font.render("Game Over!", True, (255, 0, 0))  
-        else:
+            end_text = main_font.render("Game Over!", True, (255, 0, 0))
+            screen.blit(end_text, (width // 2 - end_text.get_width() // 2, height // 3))
+        else:  # Win the game
             screen.blit(win_background, (0, 0))
-        screen.blit(end_text, (width // 2 - end_text.get_width() // 2, height // 3))
 
-        name_text = ui_font.render(f"Enter your name: {player_name}", True, (255, 255, 255)) 
-        screen.blit(name_text, (width // 2 - name_text.get_width() // 2, height // 2))
+        name_text = ui_font.render(f"Enter your name: {player_name}", True, (0, 119, 204))
+        screen.blit(name_text, (width // 2 - name_text.get_width() // 2, height - 120))
 
-        submit_text = ui_font.render("Press ENTER to submit", True, (255, 255, 255))  
-        screen.blit(submit_text, (width // 2 - submit_text.get_width() // 2, height // 2 + 50))
+        submit_text = ui_font.render("Press ENTER to submit", True, (0, 119, 204))
+        screen.blit(submit_text, (width // 2 - submit_text.get_width() // 2, height - 80))
+
+        restart_text = ui_font.render("Press R to restart", True, (0, 119, 204))
+        screen.blit(restart_text, (width // 2 - restart_text.get_width() // 2, height - 40))
 
     elif game_state == "score_board":
         if start_music_playing:
