@@ -95,8 +95,8 @@ def spawn_coin():
 
 def draw_start_screen():
     screen.blit(start_background, (0, 0))
-    title_text = main_font.render("Ski Game", True, (255, 255, 255)) 
-    start_text = ui_font.render("Press SPACE to start", True, (255, 255, 255))  
+    title_text = main_font.render("Alpine Adventure", True, (255, 255, 255)) 
+    start_text = ui_font.render("Press SPACE to Start", True, (255, 255, 255))
     screen.blit(title_text, (width // 2 - title_text.get_width() // 2, height // 3))
     screen.blit(start_text, (width // 2 - start_text.get_width() // 2, height // 2))
 
