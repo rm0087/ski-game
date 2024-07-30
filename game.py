@@ -10,7 +10,7 @@ pygame.mixer.init()
 width = int(600)
 height = int(600)
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption('Ski Game')
+pygame.display.set_caption('Alpine Adventures')
 clock = pygame.time.Clock()
 
 # Fonts
@@ -19,7 +19,7 @@ ui_font = pygame.font.Font('Font/upheavtt.ttf', 30)
 
 # Load images
 background_surf = pygame.image.load('assets/images/SKISLOPE1.png').convert()
-start_background = pygame.image.load('assets/images/start_background.png').convert()
+start_background = pygame.image.load('assets/images/SKISTART.png').convert()
 start_background = pygame.transform.scale(start_background, (width, height))
 score_background = pygame.image.load('assets/images/score_background.png').convert()
 score_background = pygame.transform.scale(score_background, (width, height))
@@ -27,7 +27,7 @@ win_background = pygame.image.load('assets/images/You_Win.png').convert()
 win_background = pygame.transform.scale(win_background, (width, height))
 game_over_background = pygame.image.load('assets/images/game_over_background.png').convert()
 game_over_background = pygame.transform.scale(game_over_background, (width, height))
-player_surf = pygame.image.load('assets/images/SKI_CHARACTER.png').convert_alpha()
+player_surf = pygame.image.load('assets/images/SKICHARACTER2.png').convert_alpha()
 player_surf = pygame.transform.scale(player_surf, (100, 100))
 tree_surf = pygame.image.load('assets/images/snow_108.png').convert_alpha()
 rock_surf = pygame.image.load('assets/images/rock.png').convert_alpha()
@@ -58,7 +58,7 @@ score = 0
 coins_collected = 0
 lives = 3
 distance = 0
-FINISH_DISTANCE = 5000
+FINISH_DISTANCE = 2000
 
 game_state = "start"
 game_over = False
@@ -106,7 +106,7 @@ def reset_game():
     coins = []
     score = 0
     coins_collected = 0
-    lives = 5
+    lives = 3
     distance = 0
     is_jumping = False
     player_velocity_y = 0
