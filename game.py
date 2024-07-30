@@ -1,6 +1,7 @@
 import pygame
 import random
 from sys import exit
+from db import Scores
 
 # Initialize Pygame
 pygame.init()
@@ -62,7 +63,7 @@ FINISH_DISTANCE = 2000
 game_state = "start"
 game_over = False
 game_won = False
-high_scores = []
+high_scores = Scores.get_top_scores()
 player_name = ""
 start_music_playing = False
 
@@ -98,6 +99,7 @@ def draw_score_board():
     title_text = main_font.render("High Scores", True, (0, 0, 0))  
     screen.blit(title_text, (width // 2 - title_text.get_width() // 2, 50))
 
+    high_scores = Scores.get_top_scores()
     for i, (name, score) in enumerate(high_scores[:5]):
         score_text = ui_font.render(f"{i+1}. {name}: {score}", True, (0, 0, 0))  
         screen.blit(score_text, (width // 2 - score_text.get_width() // 2, 150 + i * 50))
@@ -138,8 +140,9 @@ while True:
                 jump_sound.play()
             elif game_state == "game_over":
                 if event.key == pygame.K_RETURN:
-                    high_scores.append((player_name, score))
-                    high_scores.sort(key=lambda x: x[1], reverse=True)
+                    new_score = Scores(player_name, score)
+                    new_score.save()
+                    high_scores = Scores.get_top_scores()
                     game_state = "score_board"
                 elif event.key == pygame.K_r:
                     game_state = "start"
