@@ -108,10 +108,8 @@ while True:
     tree_collide.x -=10
     tree_collide.y -=5
     if tree_rect.right <= 0: 
-        tree_rect.left = width
-        tree_rect.top = height
-        tree_collide.x = width
-        tree_collide.y = height
+        tree_rect.x = width
+        tree_rect.y = random.randint(350,700)
         tree_collide = pygame.Rect((tree_x_pos, tree_y_pos, 1, 1))
     screen.blit(tree_surf, tree_rect)
 
