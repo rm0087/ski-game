@@ -153,6 +153,7 @@ while True:
             start_music_playing = False
         if not game_over and not game_won:
             # Player movement
+            player_collision = pygame.Rect(player_rect.x, player_rect.bottom - 3, player_rect.width, 3)
             keys = pygame.key.get_pressed()
             if keys[pygame.K_LEFT]:
                 player_rect.x -= player_speed
@@ -189,13 +190,14 @@ while True:
             for obstacle_type, obstacle_rect in obstacles:
                 obstacle_rect.x -= 10
                 obstacle_rect.y -= 5
+                obstacle_collison = pygame.Rect(obstacle_rect.x, obstacle_rect.bottom - 10, 35, 10)
                 if obstacle_type == 'tree':
                     screen.blit(tree_surf, obstacle_rect)
                 else:
                     screen.blit(rock_surf, obstacle_rect)
                 if obstacle_rect.right <= 0:
                     obstacles.remove((obstacle_type, obstacle_rect))
-                if player_rect.colliderect(obstacle_rect):
+                if player_collision.colliderect(obstacle_collison):
                     lives -= 1
                     obstacles.remove((obstacle_type, obstacle_rect))
                     if lives <= 0:
