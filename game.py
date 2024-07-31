@@ -71,26 +71,34 @@ def spawn_obstacle():
     obstacle_type = random.choice(['tree', 'rock'])
     if obstacle_type == 'tree':
         obstacle_surf = tree_surf
-        obstacle_x = random.randint(400,600)
+        obstacle_x = random.randint(0,600)
         obstacle_y = random.randint(350, height - tree_surf.get_height())
     else:  
         obstacle_surf = rock_surf
         snow_ground_top = 500  
         snow_ground_bottom = 600
-        obstacle_x = random.randint(400,600)
+        obstacle_x = random.randint(0,600)
         obstacle_y = random.randint(snow_ground_top, snow_ground_bottom - rock_surf.get_height())
     
     obstacle_rect = obstacle_surf.get_rect(topleft=(obstacle_x, obstacle_y))
     obstacles.append((obstacle_type, obstacle_rect))
 
 def spawn_coin():
-    coin_rect = coin_surf.get_rect(topleft=(width, random.randint(350, height)))
+    min_y = 400
+    max_y = 500
+  
+    min_x = width
+    max_x = width + 50  
+
+    coin_rect = coin_surf.get_rect(topleft=(random.randint(min_x, max_x), random.randint(min_y, max_y)))
     coins.append(coin_rect)
 
 def draw_start_screen():
     screen.blit(start_background, (0, 0))
-    title_text = main_font.render("Alpine Adventure", True, (192, 192, 192)) 
-    start_text = ui_font.render("Press SPACE to Start", True, (192, 192, 192))  
+
+    title_text = main_font.render("Alpine Adventure", True, (255, 255, 255)) 
+    start_text = ui_font.render("Press SPACE to Start", True, (255, 255, 255))
+
     screen.blit(title_text, (width // 2 - title_text.get_width() // 2, height // 3))
     screen.blit(start_text, (width // 2 - start_text.get_width() // 2, height // 2))
 
@@ -280,3 +288,4 @@ while True:
 
     pygame.display.update()
     clock.tick(60)
+
