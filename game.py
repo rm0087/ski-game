@@ -1,6 +1,7 @@
 import pygame
 import random
 from sys import exit
+from db import Scores
 
 # Initialize Pygame
 pygame.init()
@@ -21,14 +22,13 @@ ui_font = pygame.font.Font('Font/upheavtt.ttf', 30)
 background_surf = pygame.image.load('assets/images/SKISLOPE1.png').convert()
 start_background = pygame.image.load('assets/images/SKISTART.png').convert()
 start_background = pygame.transform.scale(start_background, (width, height))
-score_background = pygame.image.load('assets/images/score_background.png').convert()
+score_background = pygame.image.load('assets/images/SCORE_BACKGROUND.png').convert()
 score_background = pygame.transform.scale(score_background, (width, height))
 win_background = pygame.image.load('assets/images/You_Win.png').convert()
 win_background = pygame.transform.scale(win_background, (width, height))
-game_over_background = pygame.image.load('assets/images/game_over_background.png').convert()
+game_over_background = pygame.image.load('assets/images/GAMEOVER_BACKGROUND.png').convert()
 game_over_background = pygame.transform.scale(game_over_background, (width, height))
-player_surf = pygame.image.load('assets/images/SKICHARACTER2.png').convert_alpha()
-player_surf = pygame.transform.scale(player_surf, (100, 100))
+player_surf = pygame.image.load('assets/images/SKICHARACTER2_2.png').convert_alpha()
 tree_surf = pygame.image.load('assets/images/snow_108.png').convert_alpha()
 rock_surf = pygame.image.load('assets/images/rock.png').convert_alpha()
 coin_surf = pygame.image.load('assets/images/COIN_small.png').convert_alpha()
@@ -63,7 +63,7 @@ FINISH_DISTANCE = 2000
 game_state = "start"
 game_over = False
 game_won = False
-high_scores = []
+high_scores = Scores.get_top_scores()
 player_name = ""
 start_music_playing = False
 
@@ -95,8 +95,10 @@ def spawn_coin():
 
 def draw_start_screen():
     screen.blit(start_background, (0, 0))
+
     title_text = main_font.render("Alpine Adventure", True, (255, 255, 255)) 
     start_text = ui_font.render("Press SPACE to Start", True, (255, 255, 255))
+
     screen.blit(title_text, (width // 2 - title_text.get_width() // 2, height // 3))
     screen.blit(start_text, (width // 2 - start_text.get_width() // 2, height // 2))
 
@@ -105,6 +107,7 @@ def draw_score_board():
     title_text = main_font.render("High Scores", True, (0, 0, 0))  
     screen.blit(title_text, (width // 2 - title_text.get_width() // 2, 50))
 
+    high_scores = Scores.get_top_scores()
     for i, (name, score) in enumerate(high_scores[:5]):
         score_text = ui_font.render(f"{i+1}. {name}: {score}", True, (0, 0, 0))  
         screen.blit(score_text, (width // 2 - score_text.get_width() // 2, 150 + i * 50))
@@ -145,8 +148,9 @@ while True:
                 jump_sound.play()
             elif game_state == "game_over":
                 if event.key == pygame.K_RETURN:
-                    high_scores.append((player_name, score))
-                    high_scores.sort(key=lambda x: x[1], reverse=True)
+                    new_score = Scores(player_name, score)
+                    new_score.save()
+                    high_scores = Scores.get_top_scores()
                     game_state = "score_board"
                 elif event.key == pygame.K_r:
                     game_state = "start"
