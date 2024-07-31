@@ -112,7 +112,7 @@ def draw_score_board():
         score_text = ui_font.render(f"{i+1}. {name}: {score}", True, (0, 0, 0))  
         screen.blit(score_text, (width // 2 - score_text.get_width() // 2, 150 + i * 50))
 
-    restart_text = ui_font.render("Press R to restart", True, (0, 0, 0)) 
+    restart_text = ui_font.render("Press down arrow to restart", True, (0, 0, 0)) 
     screen.blit(restart_text, (width // 2 - restart_text.get_width() // 2, height - 100))
 
 def reset_game():
@@ -152,14 +152,14 @@ while True:
                     new_score.save()
                     high_scores = Scores.get_top_scores()
                     game_state = "score_board"
-                elif event.key == pygame.K_r:
+                elif event.key == pygame.K_DOWN:
                     game_state = "start"
                     reset_game()
                 elif event.key == pygame.K_BACKSPACE:
                     player_name = player_name[:-1]
                 else:
                     player_name += event.unicode
-            elif game_state == "score_board" and event.key == pygame.K_r:
+            elif game_state == "score_board" and event.key == pygame.K_DOWN:
                 game_state = "start"
 
     if game_state == "start":
@@ -277,7 +277,7 @@ while True:
         submit_text = ui_font.render("Press ENTER to submit", True, (0, 119, 204))
         screen.blit(submit_text, (width // 2 - submit_text.get_width() // 2, height - 80))
 
-        restart_text = ui_font.render("Press R to restart", True, (0, 119, 204))
+        restart_text = ui_font.render("Press down arrow to restart", True, (0, 119, 204))
         screen.blit(restart_text, (width // 2 - restart_text.get_width() // 2, height - 40))
 
     elif game_state == "score_board":
